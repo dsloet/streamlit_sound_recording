@@ -1,3 +1,4 @@
+import os
 import logging
 import pyaudio, wave
 
@@ -5,7 +6,7 @@ from settings import (
     DURATION,
     DEFAULT_SAMPLE_RATE,
     MAX_INPUT_CHANNELS,
-    WAVE_OUTPUT_FILE,
+    RECORDING_DIR,
     INPUT_DEVICE,
     CHUNK_SIZE,
 )
@@ -29,7 +30,7 @@ class Sound(object):
         self.sample_rate = DEFAULT_SAMPLE_RATE
         self.chunk = CHUNK_SIZE
         self.duration = DURATION
-        self.path = WAVE_OUTPUT_FILE
+        self.path = RECORDING_DIR
         self.device = INPUT_DEVICE
         self.frames = []
         self.audio = pyaudio.PyAudio()
@@ -51,7 +52,7 @@ class Sound(object):
                 [(key, value) for key, value in info_dict.items() if key in keys]
             )
 
-    def record(self):
+    def record(self, filename):
         # start Recording
         self.audio = pyaudio.PyAudio()
         stream = self.audio.open(
@@ -72,16 +73,17 @@ class Sound(object):
         stream.stop_stream()
         stream.close()
         self.audio.terminate()
-        self.save()
+        self.save(filename)
 
-    def save(self):
-        waveFile = wave.open(self.path, "wb")
+    def save(self, filename):
+        path = os.path.join(self.path, filename)
+        waveFile = wave.open(path, "wb")
         waveFile.setnchannels(self.channels)
         waveFile.setsampwidth(self.audio.get_sample_size(self.format))
         waveFile.setframerate(self.sample_rate)
         waveFile.writeframes(b"".join(self.frames))
         waveFile.close()
-        logger.info(f"Recording saved to {self.path}")
+        logger.info(f"Recording saved to {path}")
 
     # def play(self):
     #     logger.info(f"Playing the recorded sound {self.path}")
