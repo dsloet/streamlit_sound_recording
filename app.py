@@ -24,11 +24,8 @@ def main():
     sentence = st.empty()
 
     sent = st.button("Nieuwe zin")
-
     if sent:
         try:
-            # st.metric("Zin:", input_sentences[st.session_state.count])
-            # st.text(input_sentences[st.session_state.count])
             st.session_state.sentence = input_sentences[st.session_state.count]
             sentence.text(st.session_state.sentence)
             st.session_state.count += 1
