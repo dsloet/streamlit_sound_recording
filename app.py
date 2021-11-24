@@ -1,14 +1,10 @@
-from os import write
 import streamlit as st
-from src.sound import sound
-from settings import DURATION
+from recording import Recorder
 
-
+# TODO:
 input_sentences = ["Wij zijn beschikbaar op", "Zin twee."]
 
-
-def record_button(filename):
-    sound.record(filename)
+recorder = Recorder()
 
 
 def main():
@@ -32,11 +28,11 @@ def main():
         except IndexError:
             sentence.text("Einde van de beschikbare zinnen.")
 
-    record = st.button("Start/Stop")
+    record = st.button("Start")
     if record:
         sentence.text(st.session_state.sentence)
-        with st.spinner(f"Neemt op voor {DURATION} seconden"):
-            record_button(filename=f"DS_TEST_{st.session_state.count-1}.wav")
+        with st.spinner(text="In progress..."):
+            recorder.record_to_file(counter=st.session_state.count - 1)
 
 
 if __name__ == "__main__":
