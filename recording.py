@@ -142,8 +142,8 @@ class Recorder:
 
         # current date and time
         now = datetime.now().strftime("%d-%m-%Y")
-
-        filename = os.path.join(self.fileloc, f"{now}_DS_test_{counter}.wav")
+        name = f"{now}_DS_test_{counter}.wav"
+        filename = os.path.join(self.fileloc, name)
         logger.info(filename)
         wf = wave.open(filename, "wb")
         wf.setnchannels(self.channels)
@@ -151,4 +151,4 @@ class Recorder:
         wf.setframerate(self.rate)
         wf.writeframes(data)
         wf.close
-        return
+        return name
